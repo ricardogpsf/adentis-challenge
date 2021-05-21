@@ -1,6 +1,6 @@
 package services
 
-import models.Order
+import models.{Item, Order, Product}
 import org.scalatest.FunSuite
 
 import java.time.LocalDateTime
@@ -36,5 +36,62 @@ class OrderServiceTest extends FunSuite {
     assert(result(1).id === "4")
     assert(result(2).id === "5")
     assert(result(3).id === "6")
+  }
+
+  test("OrderService.groupsOrdersByProductAge") {
+    val currentDate = LocalDateTime.parse("2020-12-31 00:00:00", DateUtils.defaultFormatter)
+
+    val productDate1 = LocalDateTime.parse("2020-11-01 00:00:00", DateUtils.defaultFormatter) // 1-3 months
+    val productDate2 = LocalDateTime.parse("2020-08-01 00:00:00", DateUtils.defaultFormatter) // 4-6 months
+    val productDate3 = LocalDateTime.parse("2020-05-01 00:00:00", DateUtils.defaultFormatter) // 7-12 months
+    val productDate4 = LocalDateTime.parse("2019-11-01 00:00:00", DateUtils.defaultFormatter) // >12 months
+    val productDate5 = LocalDateTime.parse("2019-10-01 00:00:00", DateUtils.defaultFormatter) // >12 months
+
+    val product1 = Product("1", "", "", 0.0, 0.0, productDate1)
+    val product2 = Product("2", "", "", 0.0, 0.0, productDate2)
+    val product3 = Product("3", "", "", 0.0, 0.0, productDate3)
+    val product4 = Product("4", "", "", 0.0, 0.0, productDate4)
+    val product5 = Product("4", "", "", 0.0, 0.0, productDate5)
+
+    val items1 = List(Item("1", 0.0, 0.0, 0.0, "", product1)) // 1-3 months
+    val items2 = List(
+      Item("2.0", 0.0, 0.0, 0.0, "", product2),
+      Item("2.1", 0.0, 0.0, 0.0, "", product5)
+    ) // 4-6 months and >12 months
+    val items3 = List(Item("3", 0.0, 0.0, 0.0, "", product3)) // 7-12 months
+    val items4 = List(Item("4", 0.0, 0.0, 0.0, "", product4)) // >12 months
+
+    val orderDate1 = LocalDateTime.parse("2019-12-31 00:00:00", DateUtils.defaultFormatter)
+    val orders = List(
+      Order("1", "Joao", "12345", "Some street - Porto", 100.0, orderDate1, items1),
+      Order("2", "Joao", "12345", "Some street - Porto", 100.0, orderDate1, items2),
+      Order("3", "Joao", "12345", "Some street - Porto", 100.0, orderDate1, items3),
+      Order("4", "Joao", "12345", "Some street - Porto", 100.0, orderDate1, items4),
+    )
+
+    var result = OrderService.groupsOrdersByProductAge(orders, (date) => {
+      DateUtils.isBetweenMonths(date, 1, 3, currentDate)
+    })
+    assert(result.length === 1)
+    assert(result.head.id === "1")
+
+    result = OrderService.groupsOrdersByProductAge(orders, (date) => {
+      DateUtils.isBetweenMonths(date, 4, 6, currentDate)
+    })
+    assert(result.length === 1)
+    assert(result.head.id === "2")
+
+    result = OrderService.groupsOrdersByProductAge(orders, (date) => {
+      DateUtils.isBetweenMonths(date, 7, 12, currentDate)
+    })
+    assert(result.length === 1)
+    assert(result.head.id === "3")
+
+    result = OrderService.groupsOrdersByProductAge(orders, (date) => {
+      DateUtils.isBeforeMonths(date, 12, currentDate)
+    })
+    assert(result.length === 2)
+    assert(result.head.id === "2")
+    assert(result(1).id === "4")
   }
 }
