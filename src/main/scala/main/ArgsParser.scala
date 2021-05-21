@@ -9,11 +9,11 @@ import java.time.format.DateTimeParseException
 object ArgsParser {
   val ADDITIONAL_ARGS_ERROR_MESSAGE = "Additional args related to interval of months must be something like: \"1-3\", \">12\" or \"<12\""
 
-  def parseDataTime(dateTime: String): LocalDateTime = {
+  def parseDateTime(dateTime: String): LocalDateTime = {
     try {
       LocalDateTime.parse(dateTime, DateUtils.DEFAULT_FORMATTER)
     } catch {
-      case _: DateTimeParseException => throw new InvalidParametersException(s"Date ${dateTime} should have a valid format. Eg.: 2019-12-31 00:00:00")
+      case _: DateTimeParseException => throw new InvalidParametersException(s"Date '${dateTime}' must have a valid format. Eg.: 2019-12-31 00:00:00")
     }
   }
 

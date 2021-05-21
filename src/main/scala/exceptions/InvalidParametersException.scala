@@ -1,3 +1,3 @@
 package exceptions
 
-class InvalidParametersException(message: String) extends Exception("InvalidParameters - " + message)
+class InvalidParametersException(message: String) extends Exception("Invalid parameters - " + message)

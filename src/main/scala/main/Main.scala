@@ -18,8 +18,8 @@ object Main {
     var endTime: LocalDateTime = null
     var comparators: ListBuffer[ProductAgeComparator] = null
     try {
-      startTime = ArgsParser.parseDataTime(args(0))
-      endTime = ArgsParser.parseDataTime(args(0))
+      startTime = ArgsParser.parseDateTime(args(0))
+      endTime = ArgsParser.parseDateTime(args(0))
 
       // optional arguments for months interval
       if (args.length > 2) {
