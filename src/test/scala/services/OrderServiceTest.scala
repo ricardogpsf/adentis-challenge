@@ -7,18 +7,18 @@ import java.time.LocalDateTime
 
 class OrderServiceTest extends FunSuite {
   test("OrderService.ordersByInterval") {
-    val start = LocalDateTime.parse("2020-01-01 00:00:00", DateUtils.defaultFormatter)
-    val end = LocalDateTime.parse("2021-01-01 00:00:00", DateUtils.defaultFormatter)
+    val start = LocalDateTime.parse("2020-01-01 00:00:00", DateUtils.DEFAULT_FORMATTER)
+    val end = LocalDateTime.parse("2021-01-01 00:00:00", DateUtils.DEFAULT_FORMATTER)
 
     // should not be listed
-    val orderDate1 = LocalDateTime.parse("2019-12-31 00:00:00", DateUtils.defaultFormatter)
-    val orderDate2 = LocalDateTime.parse("2021-01-02 00:00:00", DateUtils.defaultFormatter)
+    val orderDate1 = LocalDateTime.parse("2019-12-31 00:00:00", DateUtils.DEFAULT_FORMATTER)
+    val orderDate2 = LocalDateTime.parse("2021-01-02 00:00:00", DateUtils.DEFAULT_FORMATTER)
 
     // should be listed
-    val orderDate3 = LocalDateTime.parse("2020-02-01 00:00:00", DateUtils.defaultFormatter)
-    val orderDate4 = LocalDateTime.parse("2020-01-02 00:00:00", DateUtils.defaultFormatter)
-    val orderDate5 = LocalDateTime.parse("2020-01-01 00:00:00", DateUtils.defaultFormatter)
-    val orderDate6 = LocalDateTime.parse("2021-01-01 00:00:00", DateUtils.defaultFormatter)
+    val orderDate3 = LocalDateTime.parse("2020-02-01 00:00:00", DateUtils.DEFAULT_FORMATTER)
+    val orderDate4 = LocalDateTime.parse("2020-01-02 00:00:00", DateUtils.DEFAULT_FORMATTER)
+    val orderDate5 = LocalDateTime.parse("2020-01-01 00:00:00", DateUtils.DEFAULT_FORMATTER)
+    val orderDate6 = LocalDateTime.parse("2021-01-01 00:00:00", DateUtils.DEFAULT_FORMATTER)
 
     val orders = List(
       Order("1", "Joao", "12345", "Some street - Porto", 100.0, orderDate1, List()),
@@ -39,13 +39,13 @@ class OrderServiceTest extends FunSuite {
   }
 
   test("OrderService.groupsOrdersByProductAge") {
-    val currentDate = LocalDateTime.parse("2020-12-31 00:00:00", DateUtils.defaultFormatter)
+    val currentDate = LocalDateTime.parse("2020-12-31 00:00:00", DateUtils.DEFAULT_FORMATTER)
 
-    val productDate1 = LocalDateTime.parse("2020-11-01 00:00:00", DateUtils.defaultFormatter) // 1-3 months
-    val productDate2 = LocalDateTime.parse("2020-08-01 00:00:00", DateUtils.defaultFormatter) // 4-6 months
-    val productDate3 = LocalDateTime.parse("2020-05-01 00:00:00", DateUtils.defaultFormatter) // 7-12 months
-    val productDate4 = LocalDateTime.parse("2019-11-01 00:00:00", DateUtils.defaultFormatter) // >12 months
-    val productDate5 = LocalDateTime.parse("2019-10-01 00:00:00", DateUtils.defaultFormatter) // >12 months
+    val productDate1 = LocalDateTime.parse("2020-11-01 00:00:00", DateUtils.DEFAULT_FORMATTER) // 1-3 months
+    val productDate2 = LocalDateTime.parse("2020-08-01 00:00:00", DateUtils.DEFAULT_FORMATTER) // 4-6 months
+    val productDate3 = LocalDateTime.parse("2020-05-01 00:00:00", DateUtils.DEFAULT_FORMATTER) // 7-12 months
+    val productDate4 = LocalDateTime.parse("2019-11-01 00:00:00", DateUtils.DEFAULT_FORMATTER) // >12 months
+    val productDate5 = LocalDateTime.parse("2019-10-01 00:00:00", DateUtils.DEFAULT_FORMATTER) // >12 months
 
     val product1 = Product("1", "", "", 0.0, 0.0, productDate1)
     val product2 = Product("2", "", "", 0.0, 0.0, productDate2)
@@ -61,7 +61,7 @@ class OrderServiceTest extends FunSuite {
     val items3 = List(Item("3", 0.0, 0.0, 0.0, "", product3)) // 7-12 months
     val items4 = List(Item("4", 0.0, 0.0, 0.0, "", product4)) // >12 months
 
-    val orderDate1 = LocalDateTime.parse("2019-12-31 00:00:00", DateUtils.defaultFormatter)
+    val orderDate1 = LocalDateTime.parse("2019-12-31 00:00:00", DateUtils.DEFAULT_FORMATTER)
     val orders = List(
       Order("1", "Joao", "12345", "Some street - Porto", 100.0, orderDate1, items1),
       Order("2", "Joao", "12345", "Some street - Porto", 100.0, orderDate1, items2),
@@ -69,29 +69,34 @@ class OrderServiceTest extends FunSuite {
       Order("4", "Joao", "12345", "Some street - Porto", 100.0, orderDate1, items4),
     )
 
-    var result = OrderService.groupsOrdersByProductAge(orders, (date) => {
-      DateUtils.isBetweenMonths(date, 1, 3, currentDate)
-    })
+    var result = OrderService.groupsOrdersByProductAge(orders,
+      new ProductAgeBetweenMonthsComparator(1, 3, currentDate)
+    )
     assert(result.length === 1)
     assert(result.head.id === "1")
 
-    result = OrderService.groupsOrdersByProductAge(orders, (date) => {
-      DateUtils.isBetweenMonths(date, 4, 6, currentDate)
-    })
+    result = OrderService.groupsOrdersByProductAge(orders,
+      new ProductAgeBetweenMonthsComparator(4, 6, currentDate)
+    )
     assert(result.length === 1)
     assert(result.head.id === "2")
 
-    result = OrderService.groupsOrdersByProductAge(orders, (date) => {
-      DateUtils.isBetweenMonths(date, 7, 12, currentDate)
-    })
+    result = OrderService.groupsOrdersByProductAge(orders,
+      new ProductAgeBetweenMonthsComparator(7, 12, currentDate)
+    )
     assert(result.length === 1)
     assert(result.head.id === "3")
 
-    result = OrderService.groupsOrdersByProductAge(orders, (date) => {
-      DateUtils.isBeforeMonths(date, 12, currentDate)
-    })
+    result = OrderService.groupsOrdersByProductAge(orders,
+      new ProductAgeBeforeMonthsComparator(12, currentDate)
+    )
     assert(result.length === 2)
     assert(result.head.id === "2")
     assert(result(1).id === "4")
+
+    result = OrderService.groupsOrdersByProductAge(orders,
+      new ProductAgeAfterMonthsComparator(12, currentDate)
+    )
+    assert(result.length === 5)
   }
 }
