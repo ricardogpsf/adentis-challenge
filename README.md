@@ -1,7 +1,6 @@
-# Adentis Challenge
+# Adentis - Scala Exercise
 
-This is a challenge project for the Adentis company
-It was made using Scala and following the instructions passed by email
+This is a project to study Scala.
 
 ## 🚀 Instructions
 
