@@ -34,9 +34,11 @@ sbt compile
 sbt package
 ```
 
+PS.: at first time the `sbt compile` command can take a time
+
 ### 🏃 Running the tool
 
-The command to run the tool:
+Execute:
 ```shell
 scala target/scala-2.13/adentis-challenge_2.13-0.1.jar "2018-01-01 00:00:00" "2019-01-01 00:00:00"
 ```
@@ -77,7 +79,7 @@ sbt test
 
 The result should be like:
 
-![img](https://user-images.githubusercontent.com/1815812/119213701-90607280-ba97-11eb-9120-4af87bdb422e.png)
+![image](https://user-images.githubusercontent.com/1815812/119213934-51cbb780-ba99-11eb-875c-be0aa773048f.png)
 
 
 ---
