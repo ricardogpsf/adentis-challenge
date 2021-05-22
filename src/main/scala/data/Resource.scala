@@ -18,7 +18,7 @@ object Resource {
       LocalDateTime.parse("2021-02-02 00:00:00", DateUtils.DEFAULT_FORMATTER)
     )
     val items = ListBuffer[Item]()
-    val bufferedSource = io.Source.fromFile(getClass.getClassLoader.getResource("amazon_com.csv").getPath)
+    val bufferedSource = io.Source.fromInputStream(getClass.getClassLoader.getResourceAsStream("amazon_com.csv"))
     for (line <- bufferedSource.getLines) {
       val Array(name, price, category, weight, createdAt) = line.split(";").map(_.trim)
       val productId = UUID.randomUUID().toString

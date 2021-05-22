@@ -25,12 +25,17 @@ If you are using Windows:
 ```shell
 docker run -it --rm -v C:\the\absolute\path\for\the\project\folder\:/app hseeberger/scala-sbt:8u222_1.3.5_2.13.1 bash
 ```
+### 🔧️ Build and packaging the tool
+```shell
+sbt compile
+sbt package
+```
 
-### 🔧 Running the tool
+### 🏃 Running the tool
 
 The command to run the tool:
 ```shell
-java -jar orders.jar "2018-01-01 00:00:00" "2019-01-01 00:00:00"
+scala target/scala-2.13/adentis-challenge_2.13-0.1.jar "2018-01-01 00:00:00" "2019-01-01 00:00:00"
 ```
 
 The main arguments (and required) are two dates representing a interval.
@@ -43,7 +48,7 @@ You can pass some additional arguments representing the months you want the info
 
 A full example:
 ```shell
- java -jar orders.jar "2018-01-01 00:00:00" "2019-01-01 00:00:00" "1-3" "4-6" "7-12" ">12"
+ scala target/scala-2.13/adentis-challenge_2.13-0.1.jar "2018-01-01 00:00:00" "2019-01-01 00:00:00" "1-3" "4-6" "7-12" ">12"
 ```
 
 The result should be something like:
@@ -58,6 +63,8 @@ Result:
 
 >12 months: 20 orders
 ```
+
+You can yet run using IntelliJ IDEA, the tool was made with it.
 
 ## ⚙️Executing tests
 
