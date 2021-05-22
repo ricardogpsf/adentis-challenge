@@ -29,17 +29,18 @@ object Resource {
     bufferedSource.close
 
     val orders = ListBuffer[Order]()
-    val divisor = dates.length
-    for(i <- 0 to 49) {
-      val idxOfDate = i % divisor
-      var fromIdx = i
-      var toIdx = i + 2
-      if (toIdx > 49) {
-        toIdx = 49
-        fromIdx = toIdx - 2
+    var fromItemIdx = 0
+    var toItemIdx = 0
+    for(i <- 0 to 1000) {
+      val idxOfDate = i % dates.length
+      toItemIdx = fromItemIdx + 2
+      if (toItemIdx >= items.length) {
+        fromItemIdx = 0
+        toItemIdx = 4
       }
-      val tempItems = items.slice(fromIdx, toIdx)
+      val tempItems = items.slice(fromItemIdx, toItemIdx)
       orders.addOne(Order(UUID.randomUUID().toString, "Any name", "any contract", "Rua do Porto - Porto", 100, dates(idxOfDate), tempItems.toList))
+      fromItemIdx += 1
     }
 
     orders.toList
