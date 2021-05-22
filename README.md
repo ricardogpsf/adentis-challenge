@@ -72,5 +72,10 @@ You can yet run using IntelliJ IDEA, the tool was made with it.
 sbt test
 ```
 
+The result should be like:
+
+![img](https://user-images.githubusercontent.com/1815812/119213701-90607280-ba97-11eb-9120-4af87bdb422e.png)
+
+
 ---
 ⌨️ com ❤️ por [Ricardo Galeno](https://github.com/ricardogpsf) 😊
