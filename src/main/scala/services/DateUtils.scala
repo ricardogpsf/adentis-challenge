@@ -1,9 +1,7 @@
 package services
 
-import exceptions.InvalidParametersException
-
 import java.time.LocalDateTime
-import java.time.format.{DateTimeFormatter, DateTimeParseException}
+import java.time.format.DateTimeFormatter
 
 object DateUtils {
   val DEFAULT_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
