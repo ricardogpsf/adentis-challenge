@@ -95,8 +95,8 @@ class OrderServiceTest extends FunSuite {
     assert(result(1).id === "4")
 
     result = OrderService.groupsOrdersByProductAge(orders,
-      new ProductAgeAfterMonthsComparator(12, currentDate)
+      new ProductAgeAfterMonthsComparator(12, LocalDateTime.parse("2018-01-01 00:00:00", DateUtils.DEFAULT_FORMATTER))
     )
-    assert(result.length === 5)
+    assert(result.length === 4)
   }
 }
