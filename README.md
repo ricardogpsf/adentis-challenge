@@ -25,6 +25,9 @@ If you are using Windows:
 ```shell
 docker run -it --rm -v C:\the\absolute\path\for\the\project\folder\:/app hseeberger/scala-sbt:8u222_1.3.5_2.13.1 bash
 ```
+
+Inside the container, you should enter in the `/app` folder to be able to run the next commands of this README.
+
 ### 🔧️ Build and packaging the tool
 ```shell
 sbt compile
